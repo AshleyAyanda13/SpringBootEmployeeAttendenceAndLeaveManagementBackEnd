@@ -1,6 +1,7 @@
 package com.example.demo.DTO;
 
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,16 @@ import java.time.LocalTime;
 @NoArgsConstructor
 
     public class TimeLogDto {
-        private LocalDate date;
-        private LocalTime clockInTime;
-        private LocalTime clockOutTime;
-        private Duration hoursWorked;
-        private boolean isLate;
+    @NotEmpty
+    private LocalDate date;
+    @NotEmpty
+    private LocalTime clockInTime;
+    @NotEmpty
+    private LocalTime clockOutTime;
+    @NotEmpty
+    private Duration hoursWorked;
+    @NotEmpty
+    private boolean isLate;
         private String ClockInReason;
         private String ClockOutReason;
 

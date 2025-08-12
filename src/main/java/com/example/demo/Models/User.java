@@ -8,6 +8,11 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
+
+
+
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +32,7 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String surname;
+
     private String email;
     private String password;
     private String Address;

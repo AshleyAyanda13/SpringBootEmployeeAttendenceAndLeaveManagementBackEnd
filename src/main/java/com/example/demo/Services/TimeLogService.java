@@ -1,5 +1,7 @@
 package com.example.demo.Services;
+import java.time.ZoneId;
 
+import java.time.LocalTime;
 
 import com.example.demo.DTO.TimeLogDto;
 import com.example.demo.Models.TimeLog;
@@ -45,7 +47,7 @@ import java.util.stream.Collectors;
             log.setUser(user);
             log.setDate(today);
             log.setClockInReason(timeLogDto.getClockInReason());
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now(ZoneId.of("Africa/Johannesburg"));
             log.setClockInTime(now);
 
             log.setIsLate(now.isAfter(standardStartTime));
@@ -65,7 +67,7 @@ import java.util.stream.Collectors;
                 throw new IllegalStateException("Already clocked out today");
             }
 
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now(ZoneId.of("Africa/Johannesburg"));
             log.setClockOutTime(now);
 
             Duration worked = Duration.between(log.getClockInTime(), now);

@@ -103,6 +103,20 @@ public class EmployeeController {
     public ResponseEntity<?> EditMyDetails(@AuthenticationPrincipal User userr, @RequestBody RegistrationDto user) {
 
 
+        userr.setEmail(user.getEmail());
+
+
+
+        userr.setUsername(user.getUsername());
+        userr.setSurname(user.getSurname());
+
+        userr.setAddress(user.getAddress());
+        userr.setDateOfBirth(user.getDateOfBirth());
+        userr.setIDNumber(user.getIDNumber());
+        userr.setGender(user.getGender());
+        userr.setNextOfKinName(user.getNextOfKinName());
+        userr.setNextOfKinNumber(user.getNextOfKinNumber());
+        userr.setMyNumber(user.getMyNumber());
 
         userRepository.save(userr);
         ResponseMessage responseMessage=new ResponseMessage();
