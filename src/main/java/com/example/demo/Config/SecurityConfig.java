@@ -1,8 +1,6 @@
 package com.example.demo.Config;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 import com.example.demo.Services.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +11,16 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -44,6 +46,16 @@ public class SecurityConfig {
     }
 
     @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(withDefaults())
@@ -58,14 +70,14 @@ public class SecurityConfig {
                 )
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.disable())
-                        .disable()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(-1)
+                        .maxSessionsPreventsLogin(false)
+                        .sessionRegistry(sessionRegistry())
                 )
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(logout -> logout.logoutUrl("/api/logout"))
+                .authenticationProvider(authenticationProvider())
                 .build();
     }
 
@@ -73,4 +85,11 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
+
+    @Bean
+    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisherRegistration() {
+        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
+    }
+
 }
